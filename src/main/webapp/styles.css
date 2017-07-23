@@ -1,0 +1,16 @@
+.TABLE {
+    width: 300px; /* Ширина таблицы */
+    border-collapse: collapse; /* Убираем двойные линии между ячейками */
+}
+
+.TD, .TH {
+    padding: 3px; /* Поля вокруг содержимого таблицы */
+    border: 1px solid black; /* Параметры рамки */
+}
+.trcolorRed{
+   color: red;
+}
+.trcolorRed{
+    color: black;
+}
+
