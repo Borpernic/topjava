@@ -4,6 +4,7 @@
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="fn" uri="ru.javawebinar.topjava.util.TimeUtil" %>
 
 
 <%--
@@ -39,7 +40,6 @@
 
 <%
     final List<MealWithExceed> meals = (List<MealWithExceed>) request.getAttribute("meals");
-    DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM d yyyy  hh:mm a");
 %>
 <table>
     <tr style="color: black">
@@ -58,7 +58,7 @@
         </c:if>
         <td> ${сounter.count}</td>
 
-        <td><${meal.getDateTime().format(format)}"/></td>
+        <td><${fn:formatLocalDateTime({meal.getDateTime()})}/></td>
         <td>${meal.getDescription()}</td>
         <td>${meal.getCalories()}</td>
         <td>${meal.isExceed()}</td>
