@@ -38,9 +38,7 @@
 <h3><a href="index.html">Home</a></h3>
 <h2>Meals</h2>
 
-<%
-    final List<MealWithExceed> meals = (List<MealWithExceed>) request.getAttribute("meals");
-%>
+
 <table>
     <tr style="color: black">
         <td> #</td>
@@ -58,7 +56,7 @@
         </c:if>
         <td> ${сounter.count}</td>
 
-        <td><${fn:formatLocalDateTime({meal.getDateTime()})}/></td>
+        <td>${fn:formatLocalDateTime(meal.getDateTime())}</td>
         <td>${meal.getDescription()}</td>
         <td>${meal.getCalories()}</td>
         <td>${meal.isExceed()}</td>
