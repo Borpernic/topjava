@@ -72,4 +72,10 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
         log.info("getAll");
         return repository.values().stream().sorted((o1, o2) -> o1.getName().compareTo(o2.getName())).collect(Collectors.toList());
     }
+
+    public static void main(String[] args) {
+        InMemoryUserRepositoryImpl inMemoryUserRepository = new InMemoryUserRepositoryImpl();
+        inMemoryUserRepository.repository.values().stream().forEach(System.out::println);
+
+    }
 }
