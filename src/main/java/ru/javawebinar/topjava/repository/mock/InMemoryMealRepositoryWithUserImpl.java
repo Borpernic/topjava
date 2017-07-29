@@ -1,69 +1,52 @@
 package ru.javawebinar.topjava.repository.mock;
 
 import org.slf4j.Logger;
+import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepositoryWithUser;
-import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+@Repository
 public class InMemoryMealRepositoryWithUserImpl implements MealRepositoryWithUser {
 
     private static final Logger log = getLogger(InMemoryMealRepositoryWithUserImpl.class);
-    private Map<Integer, Meal> mealsRepository = new ConcurrentHashMap<>();
+    Comparator<Meal> mealComparator = (m1, m2) -> m1.getDateTime().compareTo(m2.getDateTime());
     private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
-    private int counter;
+    private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
 
-   /*     InMemoryUserRepositoryImpl.
-        mealsRepository.forEach((integer, meal) ->
-                InMemoryUserRepositoryImpl.USERS.forEach(user -> {
-                    InMemoryUserRepositoryImpl::save;
-                    save(meal, user);
-                }
-                    ));*/
     }
 
-    @Override
-    public Meal save(Meal meal) {
-        if (meal.isNew()) {
-            meal.setId(++counter);
-        }
-        mealsRepository.put(meal.getId(), meal);
-        return meal;
-    }
-
-    @Override
-    public void delete(int id) {
-        repository.remove(id);
-    }
-
-    @Override
-    public Meal get(int id) {
-        return mealsRepository.get(id);
-    }
-
-    @Override
-    public Collection<Meal> getAll() {
-        return mealsRepository.values();
+    public static void main(String[] args) {
+        final InMemoryMealRepositoryWithUserImpl repositoryWithUser = new InMemoryMealRepositoryWithUserImpl();
+        repositoryWithUser.repository
+                .values().stream().forEach(integerMealMap -> integerMealMap.values().stream().forEach(meal -> System.out.println(meal.toString())));
+        System.out.println(repositoryWithUser.repository.values().toString());
     }
 
     @Override
     public Meal save(final Meal meal, final User user) {
 
-        final Map<Integer, Meal> userMealMap = repository.putIfAbsent(user.getId(),
-                (Map<Integer, Meal>) new ConcurrentHashMap<Integer, Meal>().put(0, meal));
-        if (userMealMap != null) {
-            repository.get(user.getId()).put(userMealMap.size() + 1, meal);
-
+        if (meal.isNew()) {
+            meal.setId(counter.incrementAndGet());
+        } else if (get(meal.getId(), user) == null) {
+            return null;
         }
+
+        final Map<Integer, Meal> userMealMap = repository.computeIfAbsent(user.getId(), ConcurrentHashMap::new);
+
+        userMealMap.put(meal.getId(), meal);
+        repository.get(user.getId()).put(userMealMap.size() + 1, meal);
+
 
         log.info("save {} User {}", meal, user);
 
@@ -84,12 +67,28 @@ public class InMemoryMealRepositoryWithUserImpl implements MealRepositoryWithUse
     public Collection<Meal> getAllByUser(final User user) {
         return null;
     }
-
-    public static void main(String[] args) {
-        final InMemoryMealRepositoryWithUserImpl repositoryWithUser = new InMemoryMealRepositoryWithUserImpl();
-        repositoryWithUser.repository
-                .values().stream().forEach(integerMealMap -> integerMealMap.values().stream().forEach(meal -> System.out.println(meal.toString())));
-        System.out.println(repositoryWithUser.repository.values().toString());
+    /*@Override
+    public Meal save(Meal meal) {
+        if (meal.isNew()) {
+            meal.setId(counter.incrementAndGet());
+        }
+        mealsRepository.put(meal.getId(), meal);
+        return meal;
     }
+
+    @Override
+    public void delete(int id) {
+        repository.remove(id);
+    }
+
+    @Override
+    public Meal get(int id) {
+        return mealsRepository.get(id);
+    }
+
+    @Override
+    public Collection<Meal> getAll() {
+        return mealsRepository.values();
+    }*/
 }
 

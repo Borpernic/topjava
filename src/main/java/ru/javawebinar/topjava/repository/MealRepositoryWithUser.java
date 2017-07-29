@@ -5,7 +5,7 @@ import ru.javawebinar.topjava.model.User;
 
 import java.util.Collection;
 
-public interface MealRepositoryWithUser extends  MealRepository {
+public interface MealRepositoryWithUser /*extends  MealRepository*/ {
 
     Meal save(Meal meal, User user);
 
