@@ -16,9 +16,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @Repository
 public class InMemoryUserRepositoryImpl implements UserRepository {
-    private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepositoryImpl.class);
+    private static final Logger log = getLogger(InMemoryUserRepositoryImpl.class);
 
     public static final List<User> USERS = Arrays.asList(
             new User("Max_Admin", "Max_Admin@gmail.com", "123", Role.ROLE_ADMIN),
