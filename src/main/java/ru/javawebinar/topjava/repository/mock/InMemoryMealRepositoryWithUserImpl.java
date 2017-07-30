@@ -13,6 +13,8 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.repository.mock.InMemoryUserRepositoryImpl.ADMIN_USER_ID;
@@ -78,7 +80,7 @@ public class InMemoryMealRepositoryWithUserImpl implements MealRepositoryWithUse
     public Collection<Meal> getAllByUser(final int userId) {
 
 
-        return repository.get(userId).values();
+        return repository.get(userId).values().stream().sorted(mealComparator).collect(Collectors.toList());
     }
 
     public static void main(String[] args) {
