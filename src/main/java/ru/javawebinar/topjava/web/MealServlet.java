@@ -21,6 +21,7 @@ import java.util.Objects;
 
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
+    private ConfigurableApplicationContext appCtxappCtx;
 
     private MealRepository repository;
 
@@ -31,6 +32,11 @@ public class MealServlet extends HttpServlet {
             repository = appCtx.getBean(InMemoryMealRepositoryImpl.class);
         }
 
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
     }
 
     @Override

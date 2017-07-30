@@ -5,20 +5,30 @@
 <html>
 <head>
     <title>Meal list</title>
-    <style>
-        .normal {
-            color: green;
-        }
-
-        .exceeded {
-            color: red;
-        }
-    </style>
 </head>
 <body>
 <section>
     <h3><a href="index.html">Home</a></h3>
     <h2>Meal list</h2>
+
+    <form method="post" action="meals?action=filter">
+        <dl>
+            <dt>From date</dt>
+            <dd><input type="date" name="startdate"></dd>
+        </dl>
+        <dl>
+            <dt>End date</dt>
+            <dd><input type="date" name="endDate"></dd>
+        </dl>
+        <dl>
+            <dt>From time</dt>
+            <dd><input type="time" name="startTime"></dd>
+        </dl>
+        <dl>
+            <dt>End time</dt>
+            <dd><input type="time" name="sndTime"></dd>
+        </dl>
+    </form>
     <a href="meals?action=create">Add Meal</a>
     <hr/>
     <table border="1" cellpadding="8" cellspacing="0">
