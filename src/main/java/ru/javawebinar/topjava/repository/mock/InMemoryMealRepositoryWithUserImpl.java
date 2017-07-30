@@ -6,6 +6,8 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepositoryWithUser;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
@@ -13,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static ru.javawebinar.topjava.repository.mock.InMemoryUserRepositoryImpl.ADMIN_USER_ID;
+import static ru.javawebinar.topjava.repository.mock.InMemoryUserRepositoryImpl.USER_USER_ID;
 
 @Repository
 public class InMemoryMealRepositoryWithUserImpl implements MealRepositoryWithUser {
@@ -23,6 +27,12 @@ public class InMemoryMealRepositoryWithUserImpl implements MealRepositoryWithUse
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
+        save(new Meal(LocalDateTime.of(2017, Month.MAY, 30, 10, 0), "Завтрак User", 500), USER_USER_ID);
+        save(new Meal(LocalDateTime.of(2017, Month.MAY, 30, 10, 0), "Обед User", 500), USER_USER_ID);
+        save(new Meal(LocalDateTime.of(2017, Month.MAY, 30, 10, 0), "Ужин User", 500), USER_USER_ID);
+        save(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак Admin", 1500), ADMIN_USER_ID);
+        save(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Обед Admin", 1500), ADMIN_USER_ID);
+        save(new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Ужин Admin", 1500), ADMIN_USER_ID);
 
     }
 
@@ -38,7 +48,7 @@ public class InMemoryMealRepositoryWithUserImpl implements MealRepositoryWithUse
         final Map<Integer, Meal> userMealMap = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
 
         userMealMap.put(meal.getId(), meal);
-        repository.get(userId).put(userMealMap.size() + 1, meal);
+        //repository.get(userId).put(userMealMap.size() + 1, meal);
 
 
         log.info("save {} User {} ", meal.getDescription(), userId);
@@ -71,34 +81,11 @@ public class InMemoryMealRepositoryWithUserImpl implements MealRepositoryWithUse
         return repository.get(userId).values();
     }
 
-    /*@Override
-    public Meal save(Meal meal) {
-        if (meal.isNew()) {
-            meal.setId(counter.incrementAndGet());
-        }
-        mealsRepository.put(meal.getId(), meal);
-        return meal;
-    }
-
-    @Override
-    public void delete(int id) {
-        repository.remove(id);
-    }
-
-    @Override
-    public Meal get(int id) {
-        return mealsRepository.get(id);
-    }
-
-    @Override
-    public Collection<Meal> getAll() {
-        return mealsRepository.values();
-    }*/
     public static void main(String[] args) {
         final InMemoryMealRepositoryWithUserImpl repositoryWithUser = new InMemoryMealRepositoryWithUserImpl();
         repositoryWithUser.repository
                 .values().stream().forEach(integerMealMap -> integerMealMap.values().stream().forEach(meal -> System.out.println(meal.toString())));
-        System.out.println(repositoryWithUser.repository.values().toString());
+        System.out.println("" + repositoryWithUser.repository.values().toString());
     }
 }
 
