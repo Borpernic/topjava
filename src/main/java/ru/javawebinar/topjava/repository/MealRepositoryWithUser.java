@@ -9,7 +9,7 @@ public interface MealRepositoryWithUser /*extends  MealRepository*/ {
 
     Meal save(Meal meal, int userId);
 
-    void delete(int mealId, int userId);
+    Boolean delete(int mealId, int userId);
 
     Meal get(int mealId, int userId);
 

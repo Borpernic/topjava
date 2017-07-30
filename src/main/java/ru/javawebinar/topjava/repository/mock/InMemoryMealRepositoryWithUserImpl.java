@@ -3,7 +3,6 @@ package ru.javawebinar.topjava.repository.mock;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepositoryWithUser;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,6 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -24,7 +22,7 @@ import static ru.javawebinar.topjava.repository.mock.InMemoryUserRepositoryImpl.
 public class InMemoryMealRepositoryWithUserImpl implements MealRepositoryWithUser {
 
     private static final Logger log = getLogger(InMemoryMealRepositoryWithUserImpl.class);
-    Comparator<Meal> mealComparator = (m1, m2) -> m1.getDateTime().compareTo(m2.getDateTime());
+    Comparator<Meal> mealComparator = (m1, m2) -> m2.getDateTime().compareTo(m1.getDateTime());
     private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
@@ -59,10 +57,11 @@ public class InMemoryMealRepositoryWithUserImpl implements MealRepositoryWithUse
     }
 
     @Override
-    public void delete(final int mealId, final int userId) {
+    public Boolean delete(final int mealId, final int userId) {
 
-        repository.get(userId).remove(mealId);
+        final Map<Integer, Meal> mealMap = repository.get(userId);
 
+        return mealMap != null && mealMap.remove(mealId) != null;
     }
 
     @Override
