@@ -6,15 +6,8 @@
 <html>
 <head>
     <title>Meal list</title>
-    <style>
-        .normal {
-            color: green;
-        }
+    <link rel="stylesheet" href="css/style.css">
 
-        .exceeded {
-            color: red;
-        }
-    </style>
 </head>
 <body>
 <section>
