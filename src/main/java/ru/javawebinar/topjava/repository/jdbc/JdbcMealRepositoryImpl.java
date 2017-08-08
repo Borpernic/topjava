@@ -21,9 +21,12 @@ import java.util.stream.Collectors;
 @Repository
 public class JdbcMealRepositoryImpl implements MealRepository {
 
-    private static final BeanPropertyRowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
-    private final JdbcTemplate jdbcTemplate;
+    private static final BeanPropertyRowMapper<Meal> ROW_MAPPER =
+            BeanPropertyRowMapper.newInstance(Meal.class);
 
+    @Autowired
+    private final JdbcTemplate jdbcTemplate;
+    @Autowired
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final SimpleJdbcInsert insertMeal;
@@ -85,8 +88,8 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? and datetime BETWEEN ? AND ?" +
-                " ORDER BY datetime, description ", ROW_MAPPER, userId, startDate,endDate);
+        return jdbcTemplate.query("SELECT * FROM meals WHERE user_id=? AND datetime BETWEEN ? AND ?" +
+                " ORDER BY datetime, description ", ROW_MAPPER, userId, startDate, endDate);
 
     }
 }
